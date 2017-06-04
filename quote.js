@@ -1,21 +1,23 @@
 
 var tweetLink = "https://twitter.com/intent/tweet?text=";
-//var randomQuoteGeneratorLink = "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&_jsonp=mycallback";
 var randomQuoteGeneratorLink = "http://quotes.stormconsultancy.co.uk/random.json";
 
 $(document).ready(function(){
 
-  $('#quote-author').text("Loading quote...");
-  $('#quote-text').html("Unknown");
+  $('#quote-text').html("Loading quote...");
+  $('#quote-author').text("Unknown");
 
   $.ajax( {
     type: "GET",
     url: randomQuoteGeneratorLink,
     success: function(data) {
-      var post = data; // The data is an array of posts. Grab the first one.
-      $('#quote-author').text(post.author);
-      $('#quote-text').html(post.quote);
-      $("#tweet-link").attr("href", tweetLink + '"' + post.quote.toString() + '" quote by ' + post.author.toString());
+      $('#quote-text').html(data.quote);
+      $('#quote-author').text(data.author);
+      $("#tweet-link").attr("href", tweetLink + '"' + data.quote.toString() + '" quote by ' + data.author.toString());
+    },
+    error: function(error) {
+      $('#quote-text').html("Error loading quoute text :(");
+      $('#quote-author').text("Unknown");
     },
     cache: false
   });
@@ -24,10 +26,13 @@ $('#generate-quote').on('click', function(e) {
     $.ajax( {
       url: randomQuoteGeneratorLink,
       success: function(data) {
-        var post = data; // The data is an array of posts. Grab the first one.
-        $('#quote-author').text(post.author);
-        $('#quote-text').html(post.quote);
-        $("#tweet-link").attr("href", tweetLink + '"' + post.quote.toString() + '" quote by ' + post.author.toString());
+        $('#quote-text').html(data.quote);
+        $('#quote-author').text(data.author);
+        $("#tweet-link").attr("href", tweetLink + '"' + data.quote.toString() + '" quote by ' + post.author.toString());
+      },
+      error: function(error) {
+        $('#quote-text').html("Error loading quoute text :(");
+        $('#quote-author').text("Unknown");
       },
       cache: false
     });
